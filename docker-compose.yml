@@ -2,6 +2,7 @@ version: '2.1'
 services:
     web:
         image: nginx:latest
+        container_name: nginxLatest
         ports:
             - "8000:80"
             - "3000:443"
@@ -15,24 +16,28 @@ services:
             - "mongodb"
     php:
         image: nanoninja/php-fpm:5.6.40
+        container_name: php5640
         restart: always
         volumes:
             - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
             - ./web:/web
     composer:
         image: composer:1.5.6
+        container_name: composer156
         volumes:
             - ./web/app:/app
         command: install
     mongodb:
         image: mongo:4.2
-        container_name: mongo
+        container_name: mongo42
         environment:
           - MONGO_INITDB_DATABASE=connectoor_production_a
           - MONGO_INITDB_ROOT_USERNAME=root
           - MONGO_INITDB_ROOT_PASSWORD=job100Eco
         restart: always
         volumes:
-            - .\\data\\db\\mongo:/data/db
+            - mongodata:/data/db/mongodb
         ports:
             - "27017-27019:27017-27019"
+volumes:
+    mongodata:
