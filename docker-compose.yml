@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 services:
     web:
         image: nginx:latest
@@ -14,22 +14,25 @@ services:
             - "php"
             - "mongodb"
     php:
-        image: nanoninja/php-fpm
+        image: nanoninja/php-fpm:5.6.40
         restart: always
         volumes:
             - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
             - ./web:/web
     composer:
-        image: composer/composer
+        image: composer:1.5.6
         volumes:
             - ./web/app:/app
         command: install
     mongodb:
-        image: mongo
+        image: mongo:4.2
         container_name: mongo
+        environment:
+          - MONGO_INITDB_DATABASE=connectoor_production_a
+          - MONGO_INITDB_ROOT_USERNAME=root
+          - MONGO_INITDB_ROOT_PASSWORD=job100Eco
         restart: always
         volumes:
-            - ./data/db/mongo:/data/db
+            - .\\data\\db\\mongo:/data/db
         ports:
-            - "27020:27017"
-        command: --storageEngine wiredTiger
+            - "27017-27019:27017-27019"
